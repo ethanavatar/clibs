@@ -21,6 +21,8 @@ PDefer<F> p_defer_func(F f) {
 #define P_DEFER_VAR(name) P_CONCATENATE(name, __COUNTER__)
 #define DEFER(code) auto P_DEFER_VAR(_deferred_var) = p_defer_func([&](){code;})
 
-#endif // !__cplusplus
+#else // !__cplusplus
+#  error "DEFER macro is only available in C++"
+#endif
 
 #endif // !E_DEFER_MACRO_HH
