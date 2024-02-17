@@ -9,8 +9,11 @@
 #define E_FILE_IO_IMPLEMENTATION
 #include "e_file_io.h"
 
-#define E_MEMORY_ARENA_IMPLEMENTATION
-#include "e_memory_arena.h"
+#define E_ARENA_ALLOC_IMPLEMENTATION
+#include "e_arena_alloc.h"
+
+#define E_BLOCK_ALLOC_IMPLEMENTATION
+#include "e_block_alloc.h"
 
 int main(void) {
     FILE *file = fopen("e_file_io.h", "rb");

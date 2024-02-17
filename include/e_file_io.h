@@ -7,6 +7,8 @@
 
 #ifdef _WIN32
 #  define fileno _fileno
+#  include <direct.h>
+#  define getcwd _getcwd
 #endif
 
 enum EIOError {
@@ -22,6 +24,8 @@ struct EIOResult {
     char *message;
 };
 
+struct EIOResult e_get_current_directory(char *out_buffer, size_t bytes);
+
 struct EIOResult e_file_size(FILE *file, size_t *out_size);
 struct EIOResult e_file_read(FILE *file, char *out_buffer, size_t bytes);
 struct EIOResult e_file_write(FILE *file, char *buffer, size_t bytes);
@@ -29,6 +33,16 @@ struct EIOResult e_file_write(FILE *file, char *buffer, size_t bytes);
 #endif // !E_FILE_IO_H
 
 #ifdef E_FILE_IO_IMPLEMENTATION
+
+struct EIOResult e_get_current_directory(char *out_buffer, size_t bytes) {
+    if (getcwd(out_buffer, bytes) == NULL) {
+        return (struct EIOResult)
+            { IO_FILE_INVALID, "Failed to get current directory" };
+    }
+
+    return (struct EIOResult)
+        { IO_OK, NULL };
+}
 
 struct EIOResult e_file_size(FILE *file, size_t *out_size) {
     if (file == NULL) {
@@ -46,7 +60,7 @@ struct EIOResult e_file_size(FILE *file, size_t *out_size) {
     size_t file_size = file_stat.st_size;
     if (file_size > UINT64_MAX) {
         char *msg = "";
-        sprintf(msg, "File size exceeds %zu bytes", UINT64_MAX);
+        sprintf(msg, "File size exceeds %llu bytes", UINT64_MAX);
         return (struct EIOResult)
             { IO_FILE_TOO_LARGE, msg };
     }
@@ -65,7 +79,7 @@ struct EIOResult e_file_read(FILE *file, char *out_buffer, size_t bytes) {
 
     if (bytes > UINT64_MAX) {
         char *msg = "";
-        sprintf(msg, "The number of bytes to read exceeds %zu", UINT64_MAX);
+        sprintf(msg, "The number of bytes to read exceeds %llu", UINT64_MAX);
         return (struct EIOResult)
             { IO_FILE_TOO_LARGE, msg };
     }
@@ -96,7 +110,7 @@ struct EIOResult e_file_write(FILE *file, char *buffer, size_t bytes) {
     }
     if (bytes > UINT64_MAX) {
         char *msg = "";
-        sprintf(msg, "The number of bytes to write exceeds %zu", UINT64_MAX);
+        sprintf(msg, "The number of bytes to write exceeds %llu", UINT64_MAX);
         return (struct EIOResult)
             { IO_FILE_TOO_LARGE, msg };
     }
