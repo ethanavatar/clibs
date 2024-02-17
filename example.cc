@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-// Must compile as C++ to use defer
+// Must compile as C++ to use DEFER
 #include "e_defer.hh"
 
 #define E_FILE_IO_IMPLEMENTATION
@@ -10,8 +10,6 @@
 
 
 int main(void) {
-    DEFER(fprintf(stderr, "Closing..."));
-
     FILE *file = fopen("e_file_io.h", "rb");
     DEFER(fclose(file));
 
@@ -31,7 +29,7 @@ int main(void) {
         return EXIT_FAILURE;
     }
 
-    res = eio_file_read_all(file, file_data, file_size);
+    res = eio_file_read(file, file_data, file_size);
 
     if (res.type != IO_OK) {
         fprintf(stderr, res.message);
@@ -39,6 +37,6 @@ int main(void) {
     }
 
     fprintf(stdout, "%s\n", file_data);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
