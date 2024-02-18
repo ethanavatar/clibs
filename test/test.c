@@ -3,6 +3,15 @@
 #define E_FILE_IO_IMPLEMENTATION
 #include "e_file_io.h"
 
+#define E_ARENA_ALLOC_IMPLEMENTATION
+#include "e_arena_alloc.h"
+
+#define E_BLOCK_ALLOC_IMPLEMENTATION
+#include "e_block_alloc.h"
+
+#define E_STACK_ALLOC_IMPLEMENTATION
+#include "e_stack_alloc.h"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -40,7 +49,7 @@ void test_file_size_invalid(void) {
     TEST_ASSERT_EQUAL_INT(0, size);
 }
 
-int main() {
+int main(void) {
     UNITY_BEGIN();
         RUN_TEST(test_get_current_dir);
         RUN_TEST(test_file_size_valid);

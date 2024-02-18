@@ -8,7 +8,7 @@ struct e_arena_header {
     size_t size;
 };
 
-#define ARENA_ALLOC_SIZE(size) (sizeof(e_arena_header) + size)
+#define ARENA_ALLOC_SIZE(size) (sizeof(struct e_arena_header) + size)
 
 void e_arena_init(void *memory, size_t capacity);
 void *e_arena_alloc(void *memory, size_t size);
@@ -18,11 +18,11 @@ void *e_arena_alloc(void *memory, size_t size);
 #ifdef E_ARENA_ALLOC_IMPLEMENTATION
 
 void e_arena_init(void *memory, size_t capacity) {
-    *(e_arena_header*) memory = (e_arena_header) { capacity, 0 };
+    *(struct e_arena_header *) memory = (struct e_arena_header) { capacity, 0 };
 }
 
 void *e_arena_alloc(void *memory, size_t size) {
-    e_arena_header* header = (e_arena_header*) memory;
+    struct e_arena_header* header = (struct e_arena_header *) memory;
     size_t new_size = header->size + size;
     if (new_size > header->capacity) {
         return NULL;
