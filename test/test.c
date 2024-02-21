@@ -1,59 +1,18 @@
 #include "unity.h"
 
-#define E_FILE_IO_IMPLEMENTATION
-#include "e_file_io.h"
+#define TEST_FILE_IO_IMPLEMENTATION
+#include "test_file_io.h"
 
-#define E_ARENA_ALLOC_IMPLEMENTATION
-#include "e_arena_alloc.h"
-
-#define E_BLOCK_ALLOC_IMPLEMENTATION
-#include "e_block_alloc.h"
-
-#define E_STACK_ALLOC_IMPLEMENTATION
-#include "e_stack_alloc.h"
-
-#include <stdio.h>
-#include <string.h>
+#define TEST_ARENA_ALLOC_IMPLEMENTATION
+#include "test_arena_alloc.h"
 
 void setUp(void) { }
 void tearDown(void) { }
 
-void test_get_current_dir(void) {
-    char cwd[512] = { 0 };
-    struct EIOResult result = e_get_current_directory(cwd, sizeof(cwd));
-
-    TEST_ASSERT_EQUAL_INT(IO_OK, result.type);
-    TEST_ASSERT_GREATER_THAN(0, strlen(cwd));
-}
-
-void test_file_size_valid(void) {
-    FILE *file = fopen("include/e_file_io.h", "rb");
-    TEST_ASSERT_NOT_NULL(file);
-
-    size_t size = 0;
-    struct EIOResult result = e_file_size(file, &size);
-
-    TEST_ASSERT_EQUAL_INT(IO_OK, result.type);
-    TEST_ASSERT_GREATER_THAN(0, size);
-
-    fclose(file);
-}
-
-void test_file_size_invalid(void) {
-    FILE *file = NULL;
-
-    size_t size = 0;
-    struct EIOResult result = e_file_size(file, &size);
-
-    TEST_ASSERT_EQUAL_INT(IO_FILE_INVALID, result.type);
-    TEST_ASSERT_EQUAL_INT(0, size);
-}
-
 int main(void) {
     UNITY_BEGIN();
-        RUN_TEST(test_get_current_dir);
-        RUN_TEST(test_file_size_valid);
-        RUN_TEST(test_file_size_invalid);
+        RUN_TEST_FILE_IO();
+        RUN_TEST_ARENA_ALLOC();
     return UNITY_END();
 }
 
